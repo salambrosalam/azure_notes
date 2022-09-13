@@ -1,0 +1,16 @@
+
+Azure notes
+
+=================================
+
+Deply and Manage compute resources
+
+
+
+Default creating windows VM using azure gui.
+B1s size is free for 750 hours per month (if free-tier period)
+Windows Server prefer config: (2vcpus, 8GB RAM)
+
+Security group is creating by default with VM (if you will not choose any security group)
+Azure Virtual Network - is isolated network on the Azure Cloud
+

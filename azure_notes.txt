@@ -14,3 +14,78 @@ Windows Server prefer config: (2vcpus, 8GB RAM)
 Security group is creating by default with VM (if you will not choose any security group)
 Azure Virtual Network - is isolated network on the Azure Cloud
 
+If you have some issues with limits of creating VMs, you have to create request for extension of limit (Microsoft.Compute)
+
+
+IIS - web server on windows
+how to install it using GUI:
+>"Add features"
+>in section "Server Roles" click on Web Server (IIS)
+>add PORT 80 as allowed in network security group (nsg) attached to this VM 
+Then just "next" and install :)
+
+In Azure Subscription you should to create your monthly budget and budget alert (for example 80% percents of used budget)
+
+No costs resources: Virtual Network, NSG, Network interface
+
+State of the Virtual Machine:
+
+Types of disks:
+>OS disk (Managed Disk -Designed for high availability, all aspects of the disk will be managed by Azure themselves)
+>Temporary disk - size varies depending on the instance size, data on the temporary disk is lostu during a maintenance event, data is lost when you redeploy or STOP and START the VM,
+you will not LOST your data in case of RESTART VM                  
+
+Azure have a separeted costs of a resource, even if your VM is shutdown you'll pay for disks (of this VM)                                                                                 
+
+SSH tip: pub key is stored on VM, you will get private key for connet and auth on this VM 
+
+
+Azure Disks:
+
+>Management - You have Azure Managed Disks that are completely managed by Azure
+>Virtualized - Its like having physical disks but they are virtualized
+>Highly available - Designed with 99.999% availability
+>Support - Has support with features such as Availability Zones, Azure Backup etc.
+
+Disk Types:
+>Standard HDD - This is ideal for backup environments and non-critical workloads. Max disk size - 32 767 GB, Max throughput - 500MB/s Max IOPS - 2000
+>Standard SSD - This is ideal for Web Servers and Dev/Test Environments. Max disk size - 32 767 GB, Max throughput - 750 MB/s, Max IOPS - 6000.
+>Premium SSD - This is ideal for Production environments. Max disk size - 32 767 GB, Max throughput - 950 MB/s, Max IOPS - 20 000.
+>Ultra Disk - This is ideal for Input/Output instensive workloads - SQL, Oracle databases. Max disk size - 65 536 GB, Max throughput - 4000 MB/s. Max IOPS - 160 000.
+
+
+Server-Side Disk Encryption:
+
+Your data is automatically encrypted using 256-bit AES Encryption
+This protects the data at rest
+This is done for Managed disks - OS and data Disks
+
+It's need to if this disk will be stolen, hackers can't get data from disk cause encryption
+
+for example: 
+Encryption: SSE (Server-Side Encryption) with PMK (Platform managed key). That means that key to decrypt this key is stored on platform.
+
+You also have option "Customer keys for encryption":
+> you can store your keys using "Azure key vault"
+to make this:
+>create key vault
+>create key
+>create disk encryption set
+>encrypt disk with "disk encryption set"
+
+Azure Disk Encryption:
+
+os Windows (with bit locker) on Linux with DM-Crypt
+Encrypt your disk volumes:
+>create key in key vault
+>open additional settings and enable disks to encrypt (OS and data disks), and choose current key.
+
+
+
+
+
+
+
+
+
+

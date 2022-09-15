@@ -80,7 +80,78 @@ Encrypt your disk volumes:
 >create key in key vault
 >open additional settings and enable disks to encrypt (OS and data disks), and choose current key.
 
+IOPS - Input/Output operations per second (read and writes to data, for example from database)
+Throughput - Amount of data is being sent to the storage disk at a specified interval (MB per sec)
 
+Disk snapshot:
+
+To make snapshot of disk on Azure:
+>Create disk
+>click "Create snapshot"
+
+Snapshot it's READ-ONLY disk replica, but you can create disk based on snapshot (for exapmle, you will get data from snapshot on disk based on this snapshot)
+
+Shared Disk:
+
+Azure Shared Disk - This allows a managed disk to be attached to multiple virtual machine, can only enable for PREMIUM and ULTRA disks!
+
+how to make:
+>Create "Managed Disk"
+>Configure VM's (this should be the same location as this share disk)
+>To attach disk, you have to stop VM 
+
+Manage and UnManaged Disks:
+
+Managed disk - you get high availability. Because the data is replicated automatically on different places within Azure Data center.
+Un-managed disk - you own disk, not managed by Azure and these disk will be stored in Azure blob's storage and then you can attach disk to the VM.
+
+NOTE: You can't have both managed and un-managed disk with VM
+
+Ok difference in cost. For the managed disk you will pay for all space (for example 128GB), in un-managed disk only for space wich you consumes.
+
+The storage account disk type (premium SSD or standard SSD, HDD) should be the same like a disk for VM
+
+how to make un-managed disk:
+>create storage account
+>on stage of creating VM, on "Disks" disable managed disks, and enable "Use ephemeral OS disk" and choose storage account
+
+Un-managed disks stored in "vhds container" in storage account
+
+Custom Script Extensions:
+
+This tool can be used on Azure virtual Machines to download and execute scripts.
+This is ideal when you want to deploy any custom configuration of any software installation on a virtual machine.
+The scripts can be located in an Azure storage account or even on GitHub.
+A time duration of 90 minutes is allowed for the script to run. Any longer and the result will be a failed extension provision.
+It's ideal not to place reboots inside the scripts, because the extension will not continue after the reboot. Hence if have other commands that need to run via the extension after the reboot, they won't run.
+If your scipt does need a reboot, then maybe you can look at other tools such as Desired State Configuration, Chef or Puppet.
+The script will run only once.
+The Custom Script Extension will run under the impersonation of the LocalSystem Account.
+
+On Windows - PowerShell scripts.
+On Linux - Bash scripts 
+
+Cloud init - this is scripts like Script Extensions but in plain text way, you should not download script file and with Azure syntax
+you could run Azure Scripts, example:
+
+#cloud-config
+package_upgrade: true
+packages: 
+	- nginx
+
+Boot Diagnostics:
+
+This is option to diagnostics for VM (during the time of VM)
+
+Serial Console:
+
+To use this option you have to use "Enable with custom storage account" in Boot diagnostics
+Using serial console you could connect to VM using console
+
+Run Command:
+
+Useful option to run some scripts on running VM
+ 
 
 
 

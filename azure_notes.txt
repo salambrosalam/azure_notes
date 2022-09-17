@@ -152,11 +152,41 @@ Run Command:
 
 Useful option to run some scripts on running VM
  
+Azure Bastion Service:
 
+Azure Bastion Service - Fully managed PaaS service to connect to the VM's without public IP (throw this Bastion Host)
+Provides RDP/SSH connectivity to virtual machines from the Azure Portal via TLS
 
+Azure Bastion - must have subnet name "AzureBastionSubnet". This subnet will host Bastion compute instances
+Then we should to assign public IP address to bastion.
+Then to use just click "Bastion" in connectio section (in VM menu)
 
+Basic tier of Bastion host - can't change bastion compute instances
+Standard tier of Bastion host - can change bastion compute instances
 
+Availability sets:
+An availability set is a logical grouping of VMs that allows Azure to understand how your application is built to provide for redundancy and availability
 
+Using availiability sets you will get an SLA of 99.95% 
+
+Fault domain - define the group of virtual machines that share a common power source and network switch (server rack). By default, the virtual machines configured within your availability set are separated across up to three fault domains.You can have up to 3 fault domains.
+Update domain - Update domains indicate groups of virtual machines and underlying physical hardware that can be rebooted at the same time. You can have up to 20 update domains.
+
+In 1 fault domain you can have a few update domains
+
+Proximity placement group - store your machines closer together to get better communications, you can choose this option
+ONLY when you create a virtual machine you can assign the availability set!
+
+Availability zones:
+
+Availibility zones - are unique physical locations that are equipped with independent power, cooling and networking.
+There are normally three Availiability zones in region.
+
+Using this we will get extra costs for bandwith
+
+Using availiability sets you will get an SLA of 99.99% 
+
+Using scale set, you can choose multiple availability zones
 
 
 

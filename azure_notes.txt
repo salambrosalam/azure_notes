@@ -159,7 +159,7 @@ Provides RDP/SSH connectivity to virtual machines from the Azure Portal via TLS
 
 Azure Bastion - must have subnet name "AzureBastionSubnet". This subnet will host Bastion compute instances
 Then we should to assign public IP address to bastion.
-Then to use just click "Bastion" in connectio section (in VM menu)
+Then to use just click "Bastion" in connection section (in VM menu)
 
 Basic tier of Bastion host - can't change bastion compute instances
 Standard tier of Bastion host - can change bastion compute instances
@@ -187,6 +187,129 @@ Using this we will get extra costs for bandwith
 Using availiability sets you will get an SLA of 99.99% 
 
 Using scale set, you can choose multiple availability zones
+
+Azure Scale sets:
+
+Scale set - this is tool to distribute the load on several machines instead of one. (for example: To scale from 1 machine to 3)
+We can define the rules. The rule is based on a condition. Scale out - if the CPU percentage > 70% then add one machine, scale in - if the CPU percentage < 70 % then delete one machine
+To define the scaling rule:
+
+Open "Scaling" section in scale-set:
+>enable "Custom autoscale"
+>define the auto-scaling rule
+
+There two types: 
+>Uniform orchestration mode - Optimized for large scale stateless workloads with identical instances
+>Flexible orchestration mode - achieve high availability at scale with identical or multiple virtual machine types
+
+In uniform mode - you have separate API's of scale set to manage this VM's
+in flexible mode - you have normal VM API's to manage VM. (resources creates like a separate VM)
+
+VM Image:
+
+Image - This is a copy of the full VM which includes the data disks or just the OS disk
+You can create an image and place as part of an Azure compute gallery
+
+You can share the Azure compute gallery across your organizations so that other users can create VM's based on the images stored in the gallery
+Image Definition - This is a grouping of image versions. Each image definition has information about why the image was created and other information related to the image
+Image Version - this is used to create the VM.
+Two types of images that you can create:
+>Specialized VM images. Here information about specific users and machine information is retained. So new VM's created out of the image will have the same computer name and admin user information.
+>Generalized VM images. Here information about specific users and machine information is removed.  Here you have to perform the process of generalization. The original VM is unusable after you perform this process.
+
+Generalized VM:
+>on Windows you have path: C:/Windows/System32/Sysprep/  here will be app (sysprep)
+>enable "Generalize" to prepare machine to Generalized Image (this app will remove all credentials, will prepapre machine and you will not have opportunity to use this VM more)
+
+
+Azure Gallery - dataset of VM images, you can share gallery to others users in Azure
+
+Resize VM:
+
+>choose VM
+>select section "Size"
+>change size
+
+Proximity Placement groups:
+
+Normally when you create multiple virtual machines or virtual machines that are part of virtual machine scale set, these machines could be located in different data centers.
+Sometimes an application/system that uses multiple virtual machines, want the virtual machines to be located closer together to get latency when it comes to communication between the virtual machines
+By placing the virtual machines as part of a proximity group, the virtual machines will be physically located close to each other.
+When using proximity placement groups, ensure the virtual machines have accelerated nerworking enabled. This also helps to improve network performance.
+When deploying VM's from differents families or SKU's, try to deploy them as part of a single template. This will increase the probability of ensuring all VM's are deployed successfully.
+A proximity placement group is assigned to a data center when the first resource (VM) is being deployed and released once the last resource is being deleted or stopped.
+
+How to make:
+>Create "Proximity Placement Group"
+>choose create group in during creating VM
+
+Azure Web App:
+
+You don't have to maintain the underlying compute Infrastructure.
+It has features such as Autoscaling and security.
+It has DevOps capabilities which includes continuous deployement.
+
+App Service planes:
+>Free: max 10apps. Disk space - 1GB. Max instances - 0. Custom Domain - 0. Auto Scale - 0. Hybrid Connectivity - 0.
+>Shared: max 100apps. Disk space - 1 GB. Max instances - 0. Custom Domain - Supported. Auto scale - 0. Hybrid Connectivity - 0.
+>Basic: max apps - unlimited. Disk space: 10GB. Max instances - 3. Custom domain - Supported. Auto Scale - 0. Hybrid Connectivity - Supported.
+>Standard: max apps - unlimited. Disk space: 50GB. Max instances - 10. Custom domain - Supported. Auto Scale - Supported. Hybrid Connectivity - Supported.
+>Premium: max apps - unlimited. Disk space: 250GB. Max instances - 30. Custom domain - Supported. Auto Scale - Supported. Hybrid Connectivity - Supported.
+>Isolated: max apps - unlimited. Disk space: 1 TB. Max instances - 100. Custom domain - Supported. Auto Scale - Supported. Hybrid Connectivity - Supported.
+
+Free:
+
+>Cores - 60 (CPU minutes / day)
+>RAM - 1 GB
+>Storage 1 GB
+>Price: 0$ - free tier
+
+Shared: 
+
+>Cores - 240 (CPU minutes / day)
+>RAM - 1 GB 
+>Storage - 1 GB 
+>Price: $0.013/hour per site
+
+Depends on runtime stack (programming lang.) you have to choose: Linux or Win
+
+You get a set of logging features that are available for the Azure Web App.
+The different types of logging that are available are
+
+Application Logging - This captures log messages that are generated by your application code.
+Web Server Logging - This records raw HTTP request data.
+Detailed Error Messages - This stores copies of the .htm error pages would have been sent to the client browser.
+Deployement Logging - These are logs when you publish content to an application.
+You can also stream logs in real time.
+
+Deployment slots:
+
+plans which supports slots: Standard, Premium and Isolated
+
+Staging Environments for Web Apps
+Applications in deployment slots have their own host names
+You have the chance to validate all application changes in the staging deployment slot
+You can then swap the staging slot with the production slot
+This helps eliminate the downtime for your application when new changes are deployed
+You can also easily roll back the changes
+
+To upgrade plan: 
+>in section "Scale up"
+>change plan
+
+Auto scaling of Web App:
+>in section "Scale out"
+>"custom auto scaling"
+
+Cool down - You can also set something called a “cool down” period. This is the number of minutes to wait after a scaling operation before it can scale again. 
+By default, it's set to 5 minutes. This gives the metrics a chance to stabilize again after the scaling operation. During this time the scaling process should not take into account any metrics or thresholds that get breached.
+Cool down
+
+Azure Web App VNET Integration:
+
+Allows the App service to access resources within the VNET. But it does not allow private inbound access to your Web App from the virtual network.
+use case scenario:
+>to allow connect from Web App server to the DB server in your vnet
 
 
 

@@ -311,5 +311,142 @@ Allows the App service to access resources within the VNET. But it does not allo
 use case scenario:
 >to allow connect from Web App server to the DB server in your vnet
 
+Custom Domains in Web App:
 
+In section "Custom Domain" click "Add custom domain"
+
+then on your domain portal add:
+>TXT record
+>A record
+
+You have to wait about 1 hour
+
+To add SSL cert:
+
+"Create ssl cert"
+
+Azure Web App Backups:
+
+The backup feature that is available with Azure Web App can be used to create backups of your web app.
+The backups are stored in an Azure storage account.
+Here the configuration, the file content and the database connected to the application get backed up.
+To use the Backup and Restore feature, the App Service Plan needs to be in the Standard, Premium or Isolated tier.
+Backups of the app + database can be up to a maximum of 10 GB.
+
+To make:
+>click "Backups"
+>choose backup storage
+>set backup schedule
+
+Containers:
+
+Containers helps to package the application along with libraries, frameworks and dependencies that are required.
+
+Docker - This is an open platform that is used for developing, shipping and running applications.
+Docker has the ability to package and run an application in a loosely isolated invironment called a container.
+Docker image - this is read-only template with instructions that are required to create the Docker container.
+Container - This is a runnable instance of an image.
+
+To deploy docker image on Azure:
+>create "container registry"
+>build Docker image (if gonna deploy to ACR - Azure container registry) then should set a name like this: "name_of_registry.azurecr.io/name_of_app":latest
+>get azure-cli: apt-get install azure-cli
+>login to the azure: az login
+>login to repo: az acr login --name "reponame"
+>docker push "name_of_registry.azurecr.io/name_of_app":latest
+
+To deploy container to Azure:
+>In "container registry" in section Access keys enable "Admin user"
+>create "Container instance"
+
+To deploy container group we should use deployment config file such deployment.yml :
+apiVersion: 2019-12-01
+location: northeurope
+name: AppGroup
+properties:
+  containers: 
+  - name: app
+    properties:
+      image: appregistry10002313.azurecr.io/myapp:latest
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 80   
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: 80    
+  imageRegistryCredentials:
+    - server: appregistry10002313.azurecr.io
+      username: appregistry10002313
+      password: RGhhcWieDFffTCZ2DPYe=QEDqKr4NGbI
+type: Microsoft.ContainerInstance/containerGroups
+
+then upload this file to the CloudShell and execute by this command:
+>az container create --resource-group container-grp --file deployment.yml
+
+Kubernetes (K8S):
+
+Azure Kubernetes - Managed service for Kubernetes on Azure
+Kubernetes is used to orchestrate your containers for hosting your apps
+
+Kubernetes containes:
+>Kubernetes cluster - These are used for hosting your containers
+>Master node - is used to control the nodes in the cluster
+>slave nodes - executes commands from master nodes
+>api server - all calls to the cluster from user, ONLY by api
+>kubenet - kubernetes isolated network
+>kubelet - This is a kubernetes agent that runs on the node. Kubelet - it registers the node with the master node. Will take commands from the master node for the deployement of containers
+>Container runtime - This is used to actually taking the images and deploying the containers on the node.
+>Kube-proxy is used for managing the networking aspects for the containers.
+
+To deploy kubernetes cluster:
+
+>create kubernetes cluster
+
+to deploy container to cluster use deployement.yml: 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: appregistry10002313.azurecr.io/myapp:latest
+        ports:
+        - containerPort: 80
+
+To run containers as service use service.yml:
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: myapp
+
+Networking in kubernetes Azure:
+
+1.Kubenet - Nodes receive an IP Address from the Azure virtual network. Pods recieve an IP address from a logically different address space to the Azure virtual network subnet..Network Address Translation is then used (NAT)
+2. Azure Container Networking Interface. Every pod gets an IP address from the subnet and can be accesed directly
 

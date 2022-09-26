@@ -450,3 +450,159 @@ Networking in kubernetes Azure:
 1.Kubenet - Nodes receive an IP Address from the Azure virtual network. Pods recieve an IP address from a logically different address space to the Azure virtual network subnet..Network Address Translation is then used (NAT)
 2. Azure Container Networking Interface. Every pod gets an IP address from the subnet and can be accesed directly
 
+Kubernetes configure storage:
+
+Azure Premium disks - Disks are only available to a single pod.
+Azure files - File shares can be accessed via multiple nodes or pods.
+
+How to make attach disk to deployement pod:
+
+1. Ensure to first get the credentials of your cluster in Azure Cloud Shell
+
+az aks get-credentials --resource-group test-grp --name democluster
+
+2. Get the resource group which holds the nodes of your Azure Kubernetes cluster
+
+az aks show --resource-group test-grp --name democluster --query nodeResourceGroup -o tsv
+
+3. Then create a disk. Ensure to change the resource group details accordingly
+
+az disk create --resource-group MC_test-grp_democluster_northeurope --name clusterdisk --size-gb 20 --query id --output tsv
+
+4. Use the following app.yml file as a reference for the deployment of a pod with the use of the disk
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-image
+        volumeMounts:
+          - name: storage
+            mountPath: /mnt/disk1
+        image: nginx
+        ports:
+        - containerPort: 80
+      volumes:
+          - name: storage
+            azureDisk:
+              kind: Managed
+              diskName: clusterdisk
+              diskURI: /subscriptions/20c6eec9-2d80-4700-b0f6-4fde579a8783/resourceGroups/MC_test-grp_democluster_northeurope/providers/Microsoft.Compute/disks/clusterdisk
+
+How to attach azure file share to K8S deployement:
+
+1. Set variables for the storage account name and the access key
+
+$AKS_STORAGE_ACCOUNT_NAME="newstore40000"
+
+$STORAGE_KEY="SOME_KEY"
+
+2. Then create a secret in the Kubernetes cluster
+
+kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+
+3. Use the following app.yml file as a reference for the deployment of a pod with the use of the file share
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-image
+        volumeMounts:
+          - name: storage
+            mountPath: /mnt/share
+        image: nginx
+        ports:
+        - containerPort: 80
+      volumes:
+          - name: storage
+            azureFile:
+              secretName: azure-secret
+              shareName: newshare
+              readOnly: false
+
+=================================
+
+Configure and manage virtual networking
+
+=================================
+
+Azure Virtual Network - Isolated network on the cloud
+
+The network interface - hardware or virtualized hardware that connects your PC to network
+network will get (private/public IP)
+
+To create virtual network:
+>create "Virtual network"
+
+default allocating of network:
+
+>10.0.0.0/16
+>defautl subnet 10.0.0.0/24
+
+How to add secondary network interface to VM:
+>search for "network interface" resource
+>create this "network interface" (create this in particular network/subnet)
+>attach this to the VM
+
+NSG - Network Security Groups:
+
+The purpose of NSG is filtering of traffic inside of Virtual Network
+
+There are:
+>Inbound rules ( rules to define which traffic should allow/deny during INSIDE to the some host)
+>Outbound rules ( rules to define which traffic should allow/deny during OUTSIDE of the some host)
+
+Using this rule may define:
+>Priority
+>Port number
+>Protocol
+>Source and Destination
+
+You can attach NSG or to Virtual Network Interface or Subnet but NOT to Virtual Network
+
+By default you have 3 rules:
+>65000 AllowVnetInBound - to allow traffic from Virtual Network
+>65001 AllowAzureLoadBalancerInBound - to allow load balancer traffic
+>65500 DenyAllInBound - to deny other traffic 
+
+Each rule have:
+>Port
+>Protocol
+>Source
+>Destination
+>Action (Deny/Allow)
+
+Rules priority:
+
+rules will be checking by increasing of priority number.
+Example:
+
+>RuleDenyHTTP - Priority - 200 (deny port 80 to machine 192.168.1.1)
+>RuleAllowALL - priority - 300 (allow all traffic to machine 192.168.1.1)
+In this case traffic will be denied cause rule with priority number 200 was matched, and others rules will not be evalueted
+
+
+

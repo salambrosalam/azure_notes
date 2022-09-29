@@ -604,5 +604,74 @@ Example:
 >RuleAllowALL - priority - 300 (allow all traffic to machine 192.168.1.1)
 In this case traffic will be denied cause rule with priority number 200 was matched, and others rules will not be evalueted
 
+NSG on Subnet and VM:
+>NSG rules on Subnet will evaluated first, then NSG rule on VM will be avaluated( if it will not be filtering by subnet NSG rules)
+
+Azure Load Balancer:
+
+This is service to distribute traffic between VMs.
+In OSI model this is L4 
+
+To use Load Balancer we have config:
+>Backend pool (set of VMs wich will be served by this LB - Load Balancer)
+>Public IP address (to attach to LB)
+>Health Probe
+>Load balancing rule
+
+Load Balancer have 2 SKU's - 2 pricing plans:
+>Basic Load Balancer:
+	>Free
+	>The machines in the backend pool need to be part of an availability set or scale set
+	>Health probes: TCP, HTTP
+	>Avaiability zones: Not Supported
+	>SLA: Not supported
+
+>Standard Load Balancer:
+	>Charge per hour
+	>Here the machines can also be independet machines that are part of a virtual network as a load balancer and the same location
+	>Health probes: TCP,HTTP,HTTPS
+	>Avaialability zones: Supported
+	>SLA: 99.99%
+
+To create a simple infrastructure with Azure Basic Load Balancer:
+>Create some VMs with IIS service (better choice to do it using "Custom script extension") and during create choose "availability set", for demo you can add "text 1 and 2 " to machines to check how LB will distribute requestst :)
+>Create Public IP address 
+>Enable static private addreses on machines
+>Create Load Balancer
+
+During config of LB rule, we have to config Front-End IP, Protocol, Port of LB, and Backend Port ( port of machines)
+
+NAT - Network Address Translation
+NAT inbound rules - you can use this to get translated IP addresses for backend poll VMs
+
+Better choice to use redirect port (LB port) is port from Ephemeral ports:
+>form range: 49152-65535 this is temporary ports
+
+Using this you can connect to VM using front-end ip and enter different (temporary port, which will redirect you to RDP for example) and get access to VM even without Public IP.
+To use "Custom Script Extension" on the existing scale set:
+
+1. Add the following to the install.ps1 file
+
+Add-WindowsFeature Web-Server
+Set-Content -Path "C:\inetpub\wwwroot\Default.html" -Value "This is the server $($env:computername) !"
+2. Execute the following commands for custom script extensions
+
+$config = @{
+  "fileUris" = (,"https://webstorelog1000.blob.core.windows.net/script/install.ps1");
+  "commandToExecute" = "powershell -ExecutionPolicy Unrestricted -File install.ps1"
+}
+ 
+$set = Get-AzVmss -ResourceGroupName "test-grp" -VMScaleSetName "demoscaleset"
+$set = Add-AzVmssExtension -VirtualMachineScaleSet $set -Name "customScript" -Publisher "Microsoft.Compute" -Type "CustomScriptExtension" -TypeHandlerVersion 1.9 -Setting $config
+Update-AzVmss -ResourceGroupName "test-grp" -Name "demoscaleset" -VirtualMachineScaleSet $set
+
+to use multipools:
+>You can choose port (of LB) for example on pool A 80 => 80 , on pool B 8080 => 80
+>You can create second front end IP address and attach this address to the second pool
+>Using second Front-End IP address we can map same port number on LB for using NAT rules
 
 
+
+
+
+ 

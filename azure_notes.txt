@@ -670,7 +670,65 @@ to use multipools:
 >You can create second front end IP address and attach this address to the second pool
 >Using second Front-End IP address we can map same port number on LB for using NAT rules
 
+The load balancer will create an affinity between the Load Balancer and the client for a session
+Advantage - Can help in better performance for sessions.
+Disadvantage - if too many sessions are persisted on a server.
 
+Azure Application Gateway:
+
+App Gateway - OSI Layer 7 Load Balancer
+The web apps can reside on Virtual Machines, VM's scales sets, or even on-premise servers.
+This supports for Secure Sockets Layer Termination (SSL/TLS)
+Here request to the APP Gateway can be secure
+And then the requests to the backend pool resources can go unencrypted.
+This can lift the burden of the backend pool for decrypting requests
+
+
+When you deploy an Application Gateway you should have an empty subnet
+You can use it for:
+>Using Web App Firewall
+>For route traffic by /path on differents VM pool
+
+You can also enable Autoscaling for App Gateway resource.
+This allows the App Gateway to scale up or down on traffic load patterns.
+You can also enable the Web App FireWall feature for the App Gateway resource.
+You can also enable session affinity which allows a user session to directed to the same server for processing. If the state of the user session is stored on the server, then this can be a useful feature.
+
+Components of App Gateway:
+>Frontend IP address
+>Listener - this is a logical entity that checks for incoming connection requests. There can be multiple listeners attached to an application gateway. There 2 types of Listeners:
+	>Basic - Here the listener listens to a single domain site.
+	>Multi-site - Here the listeners maps to multiple domain sites.
+>Routing Rules - This is used to route the traffic from the listener to the backend pool. There 2 types of routing rules:
+	>Basic - Here all requests are routed to backend pool directly.
+	>Path-based - Here requests are routed to the backend pool based on the URL in the requests.
+>Backend pools - These can be Network Interface cards, VM scale sets, Public or Internal IP addresses, FQDN or backends such as App Service.
+>Health Probes - This defines how the application gateway will monitor the health of the resources in the backend pool.
+
+How to make:
+>Create vnet with empty subnet for AppGeteway
+>Create VM's and attach to this vnet
+>Create Backend pools
+>Listener and Backend targets
+>create HTTP/HTTPS settings
+
+In case of Multiple dns names:
+>additionally attach dns name to pub-ip of App LoadBalancer
+> then add to your domains CNAME of APp gateway dns name
+
+Virtual Network Peering:
+
+Virtual Network Peering is used to connect two Azure virtual networks together via the backbone network.
+Azure supports connecting two virtual networks located in the same region or networks located across regions.
+
+Once you enable virtual network peering between two virtual networks, the virtual machines can then communicate via their private IP addresses across the peering connection.
+You can also peer virtual networks that are located across different subscriptions.
+
+The virtual networks can't have overlapping CIDR blocks.
+
+How to make:
+>create at least 2 Vnets with different CIDR blocks (they can't match)
+>
 
 
 

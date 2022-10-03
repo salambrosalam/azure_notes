@@ -728,8 +728,73 @@ The virtual networks can't have overlapping CIDR blocks.
 
 How to make:
 >create at least 2 Vnets with different CIDR blocks (they can't match)
+>Click on "peerings" and add new peering connection on each network (at least in one, on the second vnet it's will appear by default)
+
+VPN:
+
+VPN - Virtual Private Network
+
+Your Internet Services provider will know all of the requests that are made from your machine onto the Internet.
+Sometimes privacy can always be a concern
+VPN is used to create a private network
+Here your public IP address is not placed in the requests that are made onto the Internet
+Also VPN connections are encrypted so that the data transfer is more secure
+
+Point-to-Site VPN connection
+
+A Point-to-Site VPN connection is used to establish a secure connection between multiple client machines an an Azure virtual network via the Internet.
+ 
+It's used for remote work, when you have to connect from your PC to antother private network
+The gateway subnet is used to host gateway VM's and services
+The VM's in the gateway subnet are configured with the required VPN gateway settings
+
+How to make Point-to-Site VPN:
+>Create a vm
+>Create a Vnet with VPN gateway subnet (name like: "GatewaySubnet")
+>Create Vnet gateway
+>Generate Self-Signed root cert
+>Generate Client cert
+>In section "Point-to-site config" create configuration
 >
 
+To generate Self-Signed Root cert:
+$cert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
+-Subject "CN=VPNRoot" -KeyExportPolicy Exportable `
+-HashAlgorithm sha256 -KeyLength 2048 `
+-CertStoreLocation "Cert:\CurrentUser\My" -KeyUsageProperty Sign -KeyUsage CertSign
 
+To generate Client cert (it'c generating based on Root cert):
+New-SelfSignedCertificate -Type Custom -DnsName VPNCert -KeySpec Signature `
+-Subject "CN=VPNCert" -KeyExportPolicy Exportable `
+-HashAlgorithm sha256 -KeyLength 2048 `
+-CertStoreLocation "Cert:\CurrentUser\My" `
+-Signer $cert -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
+
+CIDR block for gateway subnet:
+>min: /29
+>recommended: /27, /26
+
+To authenticate your machine during VPN connection, use certificates:
+>Root cert - Self-Signed Root Certificate
+>Client cert - Installed on laptops for connect to the VPN
+
+Site-to-Site VPN:
+
+It's used to VPN connection between 2 networks for example on-premise network and Azure Vnet
+
+How to make:
+>Create VM for routing (with pub IP) and install "DirectAccess and VPN" REMEMBER SHARED KEY (you will use this to configure connection Site-to-Site)
+>Create a Vnet with VPN gateway subnet (name like: "GatewaySubnet")
+>Create Vnet gateway
+>In section "Connections" create "Site-to-site" Connection 
+>Create Local Network Gateway (Here you have to enter your on-premise network details "IP" "Address space")
+
+Azure virtual WAN:
+
+Azure virtual WAN - tool to connect Vnets, on-premises servers in one infrastructure
+Hub - You create a virtual hub in the virtual WAN resource. This is a Microsoft-managed virtual network.
+You then connect the various endpoints to the Hub - Azure virtual network, Site-to-Site
+
+To make
 
  

@@ -795,6 +795,93 @@ Azure virtual WAN - tool to connect Vnets, on-premises servers in one infrastruc
 Hub - You create a virtual hub in the virtual WAN resource. This is a Microsoft-managed virtual network.
 You then connect the various endpoints to the Hub - Azure virtual network, Site-to-Site
 
-To make
+To make:
+>create virtual WAN
+>create virtual hub
+>In section "virtual network connection" of virtual WAN create connections
 
- 
+Azure ExpressRoute:
+
+Allows you to connect your on-premises networks to Microsoft cloud over the private connection.
+Here the connection is established with the help of a connectivity provider.
+
+By default you get 2 connections to more redundancy.
+
+How to create:
+>Create ExpressRoute
+
+Standard SKU - Only 1 Azure region
+Premium SKU - Multiple Azure region
+
+Network Wacther Service:
+
+This is tool to monitor your network
+Connection Monitor - Check the network connectivity between machines. These can be in Azure or on your on-premises environments.
+IP flow Verify - This can be used to check if a packet is allowed or denied to or from a virtual machine. If a packet is being denied by a security group, you can see which rule is denying the packet.
+Next hop - Here you can see the next route for you understand whether tha packet is being routed to the correct destination.
+Connection troubleshoot - Check the connection from a virtual machine to a virtual machine, fully qualified domain name, URI or IPv4 address.
+NSG Diagnostic - Provides detailed information that helps to understand and debug the security configuration of the network.
+Traffic Analytics - This helps to log information about the IP traffic that is flowing through an NSG.
+NSG Flow Logs - Helps to provide visility into 
+
+Connection Troubleshoot VM:
+>IN section "connection troubleshoot" check source, dst , protocol to test
+
+Connection monitor:
+>In Network Watcher you have a lot of monitoring tools
+>create "connection monitor"
+>Log analytics workspace - centralized solution to store your network logs
+
+Ip flow verify:
+>In Network Watcher you have a lot of monitoring tools
+>create "IP flow verify"
+
+Next hop:
+>In Network Watcher you have a lot of monitoring tools
+>create "Next hop"
+
+NSG Diagnostics:
+>Assign target subnet to Network Watcher
+>Create "NSG Diagnostic"
+
+NSG Flow Logs:
+>To store your logs we have to create new "Storage acc" (or use existing)
+>Create  "flow log" in network watcher
+>In create storage acc after deploying new "Flow Log" will appear logs container
+
+Flow logs in JSON format:
+>UniTime format
+>Source IP
+>Destination IP
+>Source Port number
+>Destination port number
+>TCP/UDP
+>Inbound/Outbound
+>Deny/Allow
+
+User define routes:
+
+Like a user you can define specific way to distribute traffic (for example , throw the forward server with FireWall)
+
+how to forward traffic from SubnetA throw the Central subnet to subnet B:
+>Create 3 VMs in different subnets
+>Create route table, during creating select "Virtual appliance" and set "address prefix" as address of whole vnet, like a next hop address set IP of central-VM
+>After creating route table, associte subnets to this route table
+>On centralVM in network interface => ip configurations => Enable IP forwarding
+>Enable IP forwarding on central VM => install "Remote Access" throw the Server Manager => "Routing"  and "DirectAccess" => Start installed soft => "Deploy VPN only" => click centralvm and enable "Enable routing and remote Access" => Configure LAN routing
+
+Azure FireWall:
+
+Has built-in high availability.
+Can deploy the Azure FireWall Instance across two or more Availability zones - 99.99% SLA
+You can filter traffic based on fully-qualified domain names
+You can also create network filtering rules Based on source and destination IP address, port and protocol
+It is stateful in nature, so it understands what packets of data to allow
+It has built-in Threat Intelligence - Here you can get alerts or deny traffic from/to malicious IP addresses and domains
+
+How to make:
+>Create special subnet "AzureFirewallSubnet" /24 CIDR block
+>Create Firewall by "Microsoft"
+>In section "FireWall policy" => DNAT Rules => Add a rule collection
+>You can add "Route Table" and associate our VM subnet => then create route to connect to the Internet throw the FireWall
+>Add "Application rules" in "Firewall policy"

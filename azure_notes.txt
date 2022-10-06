@@ -917,4 +917,46 @@ Azure Implement and manage storage
 
 =====================================================================
 
+Azure Storage Accounts - This provides storage on the cloud
 
+Storage services:
+>Blob
+>Table
+>Queue
+>Fileshare
+
+Storage account types:
+>Standard General Purpose V2:
+	>Blob
+	>File shares
+	>Queues
+	>Tables
+>Premium block blobs (This is supported for block and append blobs), when you want to fast access to your blobs high transaction rates:
+	>blobs
+>Premium Page blobs (Used for virtuals disks images, disks):
+	>blobs
+>Premium file shares (this is for fast access to your files in fileshare):
+	>file shares
+	
+Blob service:
+
+This service is optimized for storing large amounts of unstructure data.
+To store files we have to create container.
+The all files will uploaded as a separate object. Each object will have uniq url
+
+Block blobs - This is made up of blocks of data that can managed individually.
+Append blobs - These are block blobsthat are optimized for append operations - Good for logging
+Page blobs - This is used for virtual hard drive files for Azure virtual machines.
+
+Access to the blob:
+Every blob object URL creates by: azure blob storage name + container name + file name = appstorage4040.blob.core.windows.net/data/AZ-104.JPG
+By default as admin you have access to files in portal Azure
+You can change access to container level:
+>private (no anonymous access)
+>Blob (anonymous read access for individual blobs only)
+>Container ( anonymous read access for containers and blobs) Itread - user will be able to list objects within the container
+
+Different authorization techniques:
+>Access Keys
+>Shared Access Signatures
+>Azure Acitve Directory

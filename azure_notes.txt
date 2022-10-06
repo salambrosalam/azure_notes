@@ -885,3 +885,36 @@ How to make:
 >In section "FireWall policy" => DNAT Rules => Add a rule collection
 >You can add "Route Table" and associate our VM subnet => then create route to connect to the Internet throw the FireWall
 >Add "Application rules" in "Firewall policy"
+
+DNS:
+
+DNS - Domain Name System
+
+How to associate DNS name with VM:
+>Buy domain name 
+>Paste pub IP to the Domain Name portal on  - A record
+
+How to create Internal DNS in azure vnet:
+>Configure DNS server VM => Install "DNS server" 
+>Configure other VMs to work with this DNS server
+>In vnet settings section "DNS servers" => Enter IP address of DNS server VM
+>Create new A record in DNS server
+
+Private DNS:
+>Configure "DNS servers" as azure
+>Create Private DNS zone
+>Add virtual link to current Azure Vnet and Enable "Auto registration"
+
+Public DNS:
+>Create DNS zone, this service just allow to have "DNS zone" you still have to be owner of particular DNS name
+>Cange NS records - to the Azure Public DNS zone ns records after this request will be redirected to the Azure Public DNS zone 
+>Add record set to the Public DNS => Associate public IP address to the root domain
+
+
+=====================================================================
+
+Azure Implement and manage storage
+
+=====================================================================
+
+

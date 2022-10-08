@@ -960,3 +960,77 @@ Different authorization techniques:
 >Access Keys
 >Shared Access Signatures
 >Azure Acitve Directory
+
+Azure storage explorer:
+
+This is desktop tool to explore Azure Storage accounts,containers,blobs, etc.
+
+Access Keys:
+
+This used to give to someone access to Storage account
+
+How to make:
+>In storage account in section "Access keys"
+>Using this key in "Azure storage account explorer" => in section "Storage account or service" use this keys to see files
+
+In this case user will get access to all services and all data in the Storage Acc
+
+Shared Access Signatures - Blob Level:
+
+How to make:
+>Select file and "Generate SAS"
+>Generate SAS token and URL
+
+Using this URL we can get access to particular blob
+
+Shared Access Signatures - At the Storage Account Level
+
+To get Shared Access Signatures at the account level.
+
+How to make:
+>In Storage acc. in section "Shared access signature" here we can choose allowed services, permissions etc.
+>Generate SAS and connection string
+
+But you can't use Web Browser for use generated URL, you HAVE to USE Azure Storage Explorer
+
+Stored Access Policy:
+
+>You can create in section of container "Access Policy" => Stored Access Policy
+>Then in Azure Storage Explorer => in particular conatiner click "Shared Access Signature" => Attach created policy
+>Then using created SAS url (In Storage Explorer) we can attach our container as anonymous user
+
+If this SAS came to the wrong hands:
+>You can desable all permissions from this policy
+
+Active Directory Authentication:
+
+We can give access using Azure AD:
+
+>In storage account => Access Control => Add role assignment 
+>Give access to particular user or user group
+
+Then using for example Azure Storage Explorer current user will have access
+
+Data redundancy:
+
+Multiple copies of your data are stored
+This helps to protect against planned and unplanned events - transient hardware failures, network or power outages.
+
+Types of storage redundancy:
+>Locally-redundant storage:
+	>When you upload your data file, there will be 3 copies. It helps to protect against server rack of drive failures
+	>But if Data Center will go down - you will lost the data.
+>Zone-redundant storage:
+	>Here data is replicated synchronously across three Azure availability zones
+	>Each availability zone is a seperate physical location with independent power, cooling and networking.
+>Geo-redundant storage:
+	>Your data will be replicated in another region
+	>Regions where Azure will store your files - Paired Regions
+	>Data is copied three times in the primary region using LRS then data will copied 3 times in the secondary region using LRS
+>Read-access geo-redundant storage:
+	>if the requirement that app should get access to data even if primary region is go down
+	>Costs will increase
+Geo-zone-redundant storage:
+	> in Primary region data will replicated by zone redundant storage
+
+

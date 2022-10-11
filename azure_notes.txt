@@ -1033,4 +1033,41 @@ Types of storage redundancy:
 Geo-zone-redundant storage:
 	> in Primary region data will replicated by zone redundant storage
 
+AzCopy tool:
 
+When it comes to authorization with Blob storage , only Shared Access Signature and Azure AD are the supported methods.
+
+This is tool for multiplatform: Linux, Win , MacOS
+For this we have to generate SAS - Shared Access Signature
+
+Useful commands using AzCopy:
+
+Remember to change the Shared Access Signatures
+
+1. To create a container
+azcopy make "https://appstore4040.blob.core.windows.net/tmp?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D"
+
+2. To upload a file
+azcopy copy storage1.arm.json "https://appstore4040.blob.core.windows.net/tmp/storage1.arm.json?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D"
+
+3. To upload a directory
+azcopy copy "newdir/*" "https://appstore4040.blob.core.windows.net/tmp?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D"
+
+4. To upload a directory to a directory in the container
+azcopy copy "newdir/*" "https://appstore4040.blob.core.windows.net/tmp/newdir?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D"
+
+5. To upload a directory and subdirectories to a directory in the container
+azcopy copy "newdir/*" "https://appstore4040.blob.core.windows.net/tmp/newdir?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D" --recursive
+
+6. Download blob data
+azcopy copy "https://appstore4040.blob.core.windows.net/tmp/storage1.arm.json?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D" "storage1.arm.json"
+
+7. copy data between two storage accounts
+azcopy copy "https://appstore4040.blob.core.windows.net/tmp?sv=2020-08-04&ss=b&srt=sco&sp=rwdlac&se=2021-12-13T14:36:11Z&st=2021-12-13T06:36:11Z&spr=https&sig=RtWuKGVi%2BTp1yW1VNAqgSFMmFtrRrEsQ9f%2BJy7LuIZU%3D" "https://azcopydestination100034.blob.core.windows.net/tmp?sv=2020-02-10&ss=b&srt=sco&sp=rwlac&se=2021-04-12T22:26:24Z&st=2021-04-12T14:26:24Z&spr=https&sig=TMv5LmpR0RKwpg%2B8F19Q1aLNlKUyn36%2B0B5qqu5fGok%3D" --recursive
+
+Zone Redundant data storage:
+>General-purpose V2
+>Premium block blobs
+>Premium file shares
+
+You can't set access tier at on object level for General Purpose V1,Premium block blobs, Premium file shares

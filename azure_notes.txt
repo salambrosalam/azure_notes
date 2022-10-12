@@ -1033,6 +1033,109 @@ Types of storage redundancy:
 Geo-zone-redundant storage:
 	> in Primary region data will replicated by zone redundant storage
 
+Configuring Storage Redundancy:
+
+In storage account "configuration" you can change it redundancy
+Azure storage Tier:
+
+Pricing blob storage:
+>First 50 TB/month: Premium: 0.15$ per GB. Hot: 0.0184$ per GB. Cool: 0.01$ per GB. Archive: 0.00099 per GB
+>Next 450 TB/month: Premium: 0.15$ per GB. Hot: 0.0177$ per GB. Cool: 0.01$ per GB. Archive: 0.00099 per GB
+>Over 500 TB/month: Premium: 0.15$ per GB. Hot: 0.0170$ per GB. Cool: 0.01$ per GB. Archive: 0.00099 per GB
+
+Hot access tier - This is used for data that is accessed frequently
+Cool Access tier - This is used for data  that is  accessed infrequently and stored for at least 30 days
+Archive Access tier - This is used for data that is rarely accessed and stored for at least 180 days
+
+Hot and Cool Tier:
+
+This tier config you can apply for Account storage level or for Blob Level
+In "Configuration" of storage acc => Cool/Hot config
+
+Archive Access tier:
+
+This can be applyed for the blob level
+If you will enable the "Archive" tier you will not get access to the file until you will not enable "Hot" Access tier and "Rehydrate priority" (standard/high)
+
+>click on file and choose "Archive" tier
+
+LifeCycle policies:
+
+Useful case: you have a lot of files and you have to change some files to "hot"
+Transition: Here you can transition blobs from the cool to the hot access tier to save on storage costs.
+Blobs: You can transition blobs,blob versions and blob snapshots
+Deletion: You can also define rules to delete blobs, blob versions and blob snapshots
+Rules: Rules can be applied at the storage account level or to a subset of blobs
+
+Lifecycle managment:
+>Rule fileters: you can define filters for blobTypes - blockBlob, appendBlob.
+>Rule actions: You have actions such as tierToCool, tierToArchive and delete.
+>Support: Rules are supported for blob and append blobs in General-Purpose V2 accounts, Premium Block blob and blob Storage accounts.
+>Region: This feature is available in all regions.
+
+In storage account in section "Lifecycle management" => Add rule => define the rule
+
+Object replication:
+
+How to copy container:
+>Create another storage account (For test)
+>Create destination container in new storage account
+>In new storage account in section "Data protection" enable "Versioning for blobs"
+>In source storage account in section "Data protection" enable "Versioning for blobs" and "Blob change feed"
+>In source storage account in section "Object replication" => Create replication rules
+
+Azure file shares:
+
+You can access to file share via Server Message Block Protocol (SMB)
+
+How to make:
+>Create file share (For example "transaction optimized")
+>From start you can edit fileshare size (from 5TB to 1GB for example)
+>To connect this fileshare on WinMachine click connect in section "FileShare" container => choose OS Windows and copy and exute script in PowerShell
+
+This fileshare will be connected by port 445
+
+Firewall and network settings for Storage Account:
+
+In section "Firewalls and virtual networks"
+Here you can configure particular VNETs and IP to access to current Storage
+
+Azure file Sync:
+
+This option used for sync particular files on VMs
+How to make:
+
+Be careful this service too hard to delete :) it's takes a lot of time, you have to be ready for the big costs.
+
+>Create Azure file sync
+>On VMs Download/Install Azure File Sync agent
+>In azure file sync create Sync group
+>Then login in azure sync agent on each VM
+>Add server endpoints
+
+This file share will sync files only created on VMs, not directly in fileshare in Azure
+
+Azure Import/Export:
+
+Copying Data - this is used for copying large amounts of data to Azure Blob storage and Azure files.
+Transfer Data - You can also transfet data from Azure Blob storage to your on-premises environment.
+Disk Drives - Here you make use of Disk Drives. You can use your own Disk drives or use the ones provided by Microsoft.
+Jobs - You basically create a job via the Azure Portal. This will be used for transferring data to a storage account.
+
+Import/Export Service - This is available in the Azure Portal. It helps to track the data import or export job.
+WAImportExport tool - It prepare the disk drives that are required for import. 
+It helps to copy the data onto the disk drive. It encrypts the data on the drive. It generates the drive journal files that are used during the import creation.
+It helps identify the number of drives needed for the export jobs.
+
+Data box:
+
+>Data transfer - Helps to send terabytes of data in and out of Azure
+>No internet - You don't need to use your Internet connection to transfer the data
+>Scenario - Ideal when you want to transfer data sizes that are larger than 40 TB
+>Device - You order the Data Box device via the Azure Portal
+
+
+
 AzCopy tool:
 
 When it comes to authorization with Blob storage , only Shared Access Signature and Azure AD are the supported methods.

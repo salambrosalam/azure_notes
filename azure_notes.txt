@@ -1174,3 +1174,150 @@ Zone Redundant data storage:
 >Premium file shares
 
 You can't set access tier at on object level for General Purpose V1,Premium block blobs, Premium file shares
+
+=================================================
+
+Manage Azure identities and governance
+
+=================================================
+
+How to create Subscription:
+>Enter subscriptions in Azure portal search => "Add subscription"
+
+Azure Active Directory:
+
+This is your identity provider in Azure.
+Using this service we can manage our users and Role-based access control.
+
+Azure tenant - This is a dedicated and trusted instance of Azure AD.
+Azure AD directory - Each Azure tenant has a dedicated and trusted Azure AD directory. This includes the tenant's users, groups and applications and is used for performing identity and access management onto resources.
+You can map Subscription only to ONE Azure tenant (directory)
+
+How to create user in Azure AD:
+>In section "Users" => "New user" 
+By default after creating new user - user have not access to resources.
+
+Built-in Roles:
+
+Contributor - Grants full access to manage all resources, bud does not allow you to assign roles in Azure RBAC, manage assingments in Azure Blueprints or share image galleries.
+Owner - Grants full access to manage all resources, including the ability to assign roles in Azure RBAC.
+Reader - View all resources, but does now allow you to make any changes.
+User Access Adminitrator - Lets you manage user access to Azure resources.
+
+How to grant role to VM:
+>In VM in section "Access control (IAM)" => "Add role assignment" => grant Built-in role to particular user.
+
+How to grant role to Resource Group Level:
+>In Resource Group in section "Access control (IAM)" => "Add role assignment" => grant Built-in role to particular user.
+
+How to grant role at the Subscription level:
+>In Subscription in section "Access control (IAM)" => "Add role assignment" => grant Built-in role to particular user.
+
+Custom roles:
+
+You can define custom role
+
+In section "Access control (IAM)" => "Add" => "Add custom role"
+
+Azure AD licenses:
+
+>Azure Active Directory Free
+>Azure Active Directory Premium P1
+>Azure Active Directory Premium P2
+
+how to change:
+>Go to default Azure Active Directory => "All products" => Try/Buy then select particular license
+
+How to create Azure AD group:
+>Select Azure Ative directory => Groups => New group
+
+Dynamic Group:
+To work with dynamics group you HAVE use Premium License 
+
+>Select Azure Ative directory => Groups => New group in membership type enable "Dynamic User" => Add dynamic query
+
+Azure AD another roles (custom):
+RBAC - has several Azure built-in roles that you can assign to users,
+
+>In section "Roles and administrators" => Search particular role => Assign to user
+
+Azure AD Custom Domains:
+
+>Azure AD => In section "Custom Domain names" => Add custom domain => replace TXT record
+
+How to join VM to Azure AD:
+
+During creating machine in a management section enable "Login with Azure AD"
+Supports: Windows 10, Windows Server 2019, MacOS, Android
+
+Dynamic Device Group:
+
+>In Azure AD => Create Group => Membership Type "Dynamic Device"
+
+When you manage your devices, you can manage the settings via Device settings in your Azure AD directory
+1) The below setting by default allows all users to have the ability to join their devices to Azure AD. If you want you can also define selected users who could perform this operation
+
+Note:-  This is only valid for Windows 10 devices
+This is intended for companies who want to just use the cloud option and not use their on-premise devices
+
+2) Next we have the local administrators option.
+Here you can decide which users are automatically added as Administrators to domain joined devices
+
+Note:- This option would only be available if you have Azure AD Premium licences. If you have Azure AD Free , you probably won't see this option.
+By default , Global administrators and device owners are added as local administrators on the domain joined devices
+
+3) Next we have device registration
+This is applicable when users want to register devices such as Windows 10, iOS, Android, MacOS using their personal Microsoft account or another local account.
+This is meant for those organizations who also have devices on different platforms on their on-premise environments
+
+4) Next we have the condition wherein you want to impose Multi-Factor Authentication for users to join devices. This ensures a legitimate user is adding the right device.
+5) Next you can also define the maximum device registration per user
+
+Self-service password reset:
+
+This feature helps users to reset their password without the need of contacting the IT help dest staff.
+For this feature requirements:
+>Premium Azure AD
+
+Password writeback - If there is a hybrid environment, the changed passwords can be written back to the on-premises Active Directory.
+Authentication Methods - You can define authentication methods to reset the passwords.
+Number of methods - Define the number of authentication methods required to reset the password.
+Nubmer of days - Number of days before user need to reconfirm their authentication information.
+Notification - Notify users when password is reset.
+
+How to enable self-service password reset:
+>In Azure AD => password reset
+
+Guest-user:
+This is temporary users
+
+How to invite guest user:
+>In azure AD => Users => New Guest User
+
+Bulk create and delete users:
+>Azure AD => Users => Bulk operations (then you have to download and edit or upload existing template file in .csv format)
+
+MFA - Multi Factor Auth:
+
+How to enable MFA per user:
+>In Azure AD => All users => Per-user MFA
+
+Conditional Access policies:
+For using this reqiere the Azure Premium AD
+
+How to use Access policies:
+>In Azure AD => Security => Conditional Access
+Usign this policy we could create requirement to use MFA for example.
+
+Administrative Units:
+This used for logical seperating you Azure AD users (Like for departments). You can set admin for each department
+
+How to create:
+>create users and groups
+>Create users Administrators
+>Create administrative unit 
+>Add users and groups to the admin. units
+
+When you adding group of users (in this Admin unit), you ONLY can maged for a group NOT for users within the group.
+If user didn't assigned to the admin. unit he will be admin of Azure AD, he will get access to the whole AD.
+

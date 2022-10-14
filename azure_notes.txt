@@ -1318,6 +1318,75 @@ How to create:
 >Create administrative unit 
 >Add users and groups to the admin. units
 
-When you adding group of users (in this Admin unit), you ONLY can maged for a group NOT for users within the group.
+When you adding group of users (in this Admin unit), you ONLY can manage for a group NOT for users within the group.
 If user didn't assigned to the admin. unit he will be admin of Azure AD, he will get access to the whole AD.
 
+Resource tags:
+
+This can be used to organize your resources.
+Each tag consist of a name and a value pair.
+
+Moving resources across resource groups:
+
+When you move particular resources to another region (resource group) their region will not changed .
+For example you can move VM from Australia Central - first-resource-grp => US Central - second-resource-grp in this case VM will have Australia region but will be attached to the US group
+
+Moving resources across subscriptions:
+
+You can move resource to another Subscription.
+If you move vnet you have to move all resources attached to this vnet or you will get an error.
+
+Resource Lock:
+
+Locking resources can help ensure users don't accidently delete or modify resources.
+There are two types of locks.
+CanNotDelete - authorized users can still read modify a resource, but they can't delete the resource.
+ReadOnly - authorized users can read a resource, but they can't delete or update the resource.
+
+Locks can be enabled on Resource group level, resource level and Subscription Level
+When you add locks they will enable by hierarchy for example if resource group is locked, then all resources in this resource group will have this lock
+
+How to:
+
+On resource:
+>"Locks" => "Locks" => Add
+
+If you want to delete locked resource:
+>"Locks" => Delete particular lock 
+
+Moving locked resources:
+
+You can't move resources from group without lock to group WITH lock, you'll get an error.
+You can't move resources if on source resource group any locks.
+
+Azure policy:
+This tool used to restrict using some resources with particular conditions. For example , be able to create resources ONLY with tags.
+
+How to make:
+>Go to "Policy" => "Definitions"
+
+When we have policy we can modify scope level:
+>Management group
+>Subscription
+>Resource Group
+
+Optionallay you can add Exclusions
+
+You can use REMEDIATION:
+If you need to create on your resources (for example) specific tag. You can enable "Create remediation task" and add "Add a tag to resource" policy.
+In this case you'll get specific tag (which define) on all your resources.
+To do this you can use "Create a Managed Identity" in Azure AD or User Assigned managed identity, if you want to remediate this by partircular user.
+Identity will get "Contributor" permissions to be able to complete the remediation task.
+
+Not Allowed Resource types:
+
+If you will apply policy wich don't allow to create new Vnet, you will not be able to create new vnet.
+This policy will not effect on existing vnet which were created before this policy.
+
+Cost analysis:
+
+In Cost Management + Billing in particular subscription you can monitore your costs.
+You can download your costs in file
+
+You can use azure Advisor:
+Here you will get some recommendations. For example how to save reduce your costs.

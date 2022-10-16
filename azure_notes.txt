@@ -1390,3 +1390,194 @@ You can download your costs in file
 
 You can use azure Advisor:
 Here you will get some recommendations. For example how to save reduce your costs.
+
+Managememnt groups:
+
+Logical segments for deparment in your company.
+
+
+==============================================
+
+Monitoring and back up Azure resources
+
+==============================================
+
+Azure monitor = this is tool for monitoring your Azure resources. Collecting logs and analyze this.
+
+In section "Metrics" we can select resource => Check statistics
+
+Alerts:
+how to create alert rule:
+
+>In Monitor in "Alerts" section => Create rule
+>Select particular resources 
+>Create condition "create signal"
+>Add action group - this is group of members which will get an alert
+
+Log Analytics Workspace:
+
+This is central solution for all of your logs.
+Here we will use Kusto query language.
+
+How to create Analytics Workspace:
+>create "Log analytics workspace" 
+
+You can create Log Analytics Workspace in another region then your resources. But you will pay for transfering of data to the Log Analytics Workspace.
+
+How to connect VM to Analytics Workspace:
+>In Log Analytics Workspace => In section "Virtual Machines" => select particular VM and click "Connect" (On this machine will installed agent which will send statistics to the workspace)
+>Alternatively you can download agent and install manually => in section "Agent management" download agent and install this on your machine => Then enter id and key from workspace (During installation of agent on VM) and in section "Agents configuration"
+set "windows event logs" to select which analytics will send from this agent.
+
+Log Analytics Workspace Queries:
+
+In section "Logs" you can use Query for searching particular logs.
+
+In LogManagement we have different logs types:
+	>Event
+	>Heartbeat
+	>Perf
+	>Usage
+
+1 Query:
+
+>Event 
+This will show all logs by "Event" table
+
+2 Query:
+>Event | search "loadvm1"
+This query will search for logs in "Event" table for particular VM with name "loadvm1"
+
+3 Query:
+>Event | take 5
+This is take in no specific order 5 logs
+
+4 Query:
+>Event | top 10 by TimeGenerated
+This will take 10 logs from (from top of list)
+
+5 Query:
+>Event | where EventLevel == 4
+This will filter logs by EventLevel = 4 
+
+6 Query:
+>Event | where TimeGenerated > ago(5m)
+This query will take logs generated 5 minutes ago.
+
+7 Query:
+>Event | where TimeGenerated > ago(5m) | project EventLog, Computer
+
+8 Query:
+>Perf | where TimeGenerated > ago(5m) | summarize count() by ObjectName, CounterName
+
+9 Query:
+>Perf | where TimeGenerated > ago(5m) | summarize avg(CounterValue) by Computer
+
+10 Query:
+>Event | where TimeGenerated > ago(1d) | summarize count() by Computer,Source
+
+11 Query:
+>Event | where TimeGenerated > ago(1d) | summarize count() by Computer,Source | render barchart
+Render barchart will shows you a digram of results
+
+12 Query:
+>Event | where TimeGenerated > ago(1d) | summarize makeset(Source) by Computer
+
+Sending Custom logs to Log Ananlytics Workspace:
+For Example: Let's start Nginx server on Linux machine
+We can find nginx server logs in : /var/logs/nginx/access.log
+
+>We can download this log file and upload this file in section "Custom logs" in Analytics Workspace 
+>Connect this VM to analytics workspace
+
+Log Analytics - Alerts:
+>In query section write exapmle query "Linuxlog_CL | where RawData contains "93.98.191.196" and click "New alert rule"
+In this case you will get alert after avery request from this IP.
+
+Application Insights:
+
+Application Perfomance Management service for web developers.
+You can use this tool to monitor your application.
+It can help developers detect anomalies in the application.
+
+Requests rates, the response times and failure rates - This is done at the page level.
+Exception recorded by your application.
+Page views and their load performance as reported from the user's browser.
+User and session counts.
+Performance counters of the underlying windows or linux machine.
+Diagnostic trace logs from your application.
+
+How to make:
+>During creating Azure Web App in section "Monitoring" add application insights
+
+
+Azure Backup feature:
+This provides access to data on the VM if something happens to the original VM.
+The backup data gets written to a Recovery Services vault.
+
+Steps during a backup:
+>First an extension is installed on the VM - Supported for both Windows and Linux VM's
+>The backup tool first takes a snapshot of the data and stores it on the local machine.
+>The snapshot of data is then copied to the Recovery Service vault
+>When the data is transfered, the snapshot is then removed and a recovery point is then created.
+
+How to enable backup for VM:
+>Create Recovery Services vault (or use existing)
+>In VM in section "Backup" => Create backup policy 
+
+There are types of snapshots:
+>Application-consistent: when you're recovering a VM with an app-consistent snapshot, the VM boots up. There's no data corruption or loss. The apps start in a consistent state.
+>File-system consistent: When you're recovering a VM with a file-system consistent snapshot, the VM boots up. There's no data corruption or loss. Apps need to implement their own "fix-up" mechanism to make sure that resotred data is consistent.
+>Crash-consistent:Start with the VM boot process followed by a disk check to fix corruption errors. Any in-memory data or write operations that weren't transferred to disk before the crash are lost. Apps implement their own data verification.
+
+To restore files:
+>Select snapshot => file recovery => download script and execute then you will be connected to the recovery point.
+
+How to restore VM:
+>In VM section "Backup" => Restore VM
+
+To delete Recovery Service vault:
+>In Properties => Disable "Soft Delete"
+>go to the vault => Backup items => Stop backup and delete bacup data.
+
+MARS agent backup:
+
+MARS - Microsoft Azure Recovery Services agent
+
+Selective backups - Here you can perform selective backups of files and folders.
+Backup - Windows Files and Folders. Protect an entire Windows volume. Protect the Windows system state.
+Machines - This can be done on your Azure virtual machines or your on-premises machines.
+Agent - Here you download and install the Recovery service agent.
+
+How to create:
+>Create "Backup and site Recovery". Azure VM and recovery vault should be in the same location.
+>In recovery vault in section "Properties" => "Download services Agent"
+>Install MARS installer on particular VM
+
+Taking backup:
+>Open Azure Backup on VM
+>Schedule option => Select items for backup
+
+Recovery Backup:
+>Go to another VM (Where we would like to recover backup files)
+>Install MARS installer (the same one like on backup VM)
+>Choose Recover Data => Choose vault and restore data
+
+Azure Backup reports:
+>Insights - You can get insights on aspects such as the number of backups taken and storage consumed.
+>Supported for Azure VMs, SAP, HANA in Azure VMs.
+>The backup reports data is sent to a Log Analytics workspace.
+
+Azure Site Recovery:
+>Used for business continuity and for disaster recovery
+>Ensures your apps and workloads are running when there are planned or unplanned outages.
+
+The replication frequency is high, being as low as every 30 seconds for Hyper-V VMs
+Hence the RPO is low. And because you can switch over quickly, the RTO is also low.
+You can run planned failovers with zero-data loss. Or unplanned failovers with minimal data loss.
+
+RPO - Recovery Point Objective
+RTO - Recovery Time Objective
+
+How to make:
+>In particular VM go to "Disaster recovery" => Select Another region and other data to recover VM

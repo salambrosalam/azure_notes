@@ -1514,6 +1514,7 @@ How to make:
 Azure Backup feature:
 This provides access to data on the VM if something happens to the original VM.
 The backup data gets written to a Recovery Services vault.
+WARNING - The Recovery Vault need to be in the same location as the VM
 
 Steps during a backup:
 >First an extension is installed on the VM - Supported for both Windows and Linux VM's
@@ -1581,3 +1582,252 @@ RTO - Recovery Time Objective
 
 How to make:
 >In particular VM go to "Disaster recovery" => Select Another region and other data to recover VM
+
+Failover:
+
+How to test failover:
+>In vm settings in "Disaster recovery" => test filover
+
+How to backup File Share:
+>Click on fileshare => "backup" => Create backup policy
+
+How to restore file recovery:
+>Click on fileshare => "backup" => "File Recovery"
+
+
+========================================================
+
+Azure PowerShell and Azure CLI
+
+========================================================
+
+You can run PowerShell scripts on:
+>Windows
+>Linux
+>MacOS
+
+PowerShell has the ability to work with .NET objects.
+Cmdlets - These are PowerShell commands
+Modules - This is a collection of PowerShell commands
+
+Couple of PS commands:
+>Get-Service (get all services)
+>Get-Service | Where-Object {$_.Status -eq "Running"} (_ - This is current item from output list, this )
+
+How to install Azure PoweShell:
+Firstly we have to set execution policy:
+>Set-ExecutionPolicy -ExecutionPolicy ByPass
+>Install-Module -Name Az -Scope CurrenUser -Repository PSGallery -Force -AllowClobber
+>Connect -AzAccount (login to account)
+
+1_script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+
+New-AzResourceGroup -Name $resourceGroup -Location $location
+
+
+You can alternatively run scripts in Azure CloudShell
+
+Create Vnet script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$network = "exam-network"
+$AddressPrefix = "10.1.0.0/16"
+
+New-AzVirtualNetwork -Name $network -ResourceGroupName $resourceGroup `
+-Location $location -AddressPrefix $AddressPrefix
+
+
+Get details from Vnet script:
+
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$network = "exam-network"
+
+
+$virtualNetwork = Get-AzVirtualNetwork -Name $network -ResourceGroupName $resourceGroup
+Write-Host $virtualNetwork.Location
+
+Create subnet script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$network = "exam-network"
+$subnetAddressPrefix = "10.1.0.0/24"
+
+$virtualNetwork = Get-AzVirtualNetwork -Name $network -ResourceGroupName $resourceGroup
+Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $network -AddressPrefix $subnetAddressPrefix
+$virtualNetwork | Set-AzVirtualNetwork
+
+Script to new Vnet with subnet:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$network = "exam-network"
+$subnetAddressPrefix = "10.1.0.0/24"
+$AddressPrefix = "10.1.0.0/16"
+
+$subnet = Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $network -AddressPrefix $subnetAddressPrefix
+New-AzVirtualNetwork -Name $network -ResourceGroupName $resourceGroup -Location $location -AddressPrefix $AddressPrefix -Subnet $subnet
+
+Create a network interface:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$network = "exam-network"
+$subnetName = "SubnetA"
+$networkInterfaceName = "app-interface"
+
+$virtualNetwork = Get-AzVirtualNetwork -Name $network -ResourceGroupName $resourceGroup
+$subnet = Get-AzVirtualNetworkSubnetConfig -VirtualNetwork $virtualNetwork -Name $subnetName
+New-AzNetworkInterface -Name $networkInterfaceName ResourceGroupName $resourceGroup -Location $location -SubnetId $subnet.Id
+
+Create public IP address:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$publicAddressName = "app-public-ip"
+
+New-AzPublicIpAddress -Name $publicIPAddressName -ResourceGroupName $resourceGroup -Location $location -AllocationMethod Dynamic
+
+Create Network Security Group:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$networkSecurityGroupName = "app-nsg"
+
+$nsgrule1=New-AzNetworkSecurityRuleConfig -Name Allow-RDP -Access Access -Protocol Tcp -Direction Inbound -Priority 120 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix 10.1.0.0/24 -DestinationPortRange 3389
+$nsgrule1=New-AzNetworkSecurityRuleConfig -Name Allow-RDP -Access Access -Protocol Tcp -Direction Inbound -Priority 130 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix 10.1.0.0/24 -DestinationPortRange 80
+
+New-AzNetworkSecurityGroup -Name $networkSecurityGroupName -ResourceGroupName $resourceGroup -Location $location -SecurityRules $nsgrule1,$nsgrule2
+
+Create VM script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$networkSecurityGroupName = "app-nsg"
+$vmName = "appvm"
+$vmSize = "Standard_DS2_v2"
+$vmImage = "Win2019Datacenter"
+$nsgName = "app-nsg"
+$vmPublicIP = "app-public-ip"
+$virtualNetworkName = "exam-network"
+$subnetName = "SubnetA"
+$dataDiskName = "my-disk"
+
+Get-AzVMSize -Location "North Europe" (run this to check available sizes in Europe Location)
+
+New-AzVM -ResourceGroupName $resourceGroup -Location $location -Name $vmName -virtualNetworkName $virtualNetworkName -Subnet $subnetName -Image $vmImage -SecurityGroup $nsgName -PublicIpAddressName $vmPublicIP -Credential (Get-Credential)
+
+
+# If you want to attach a data disk to VM :
+
+$dataDiskConfig = New-AzDiskConfig -Location $location -CreateOption Empty -DiskSizeGB 16 -SkuName "Standard_LRS"
+$dataDisk = New-AzDisk -ResourceGroupName $resourceGroup -DiskName $dataDiskName -Disk $dataDiskConfig
+$vm = Get-AzVM -ResourceGroupName $resourceGroup -Name $vmName
+$vm = Add-AzVMDataDisk -VM $vm -Name $dataDiskName -CreateOption Attach -ManagedDiskId $dataDisk.Id -Lun 0
+
+Update-AzVM -ResourceGroupName $resourceGroup -VM $vm
+
+Create Availability Set script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$availabilitySetName = "app-set"
+
+New-AzAvailabilitySet -ResourceGroupName $resourceGroup -Location $location -Name $availabilitySetName -Sku Aligned `
+-PlatformFaultDomainCount 3 -PlatfromUpdateDomainCount 5
+
+To attach VM to this availability set use script to create VM and add -AvailabilitySetName $availabilitySetName
+
+create Storage Account script:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$storageAccountName = "appstore228332"
+
+New-AzStorageAccount -ResourceGroupName $resourceGroup -Name $storageAccountName -Location $location -SkuName Standard_GRS -Kind StorageV2
+
+Script create Azure Web App:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$appServicePlanName = "app-plan"
+$appName = "webapp788788"
+
+#First we need to create the App Service Plan
+
+New-AzAppServicePlan -Name $appServicePlanName -ResourceGroupName $resourceGroup -Location $location -Tier Free
+ 
+#Then we create the Azure Web App
+
+New-AzWebApp -Name $appName -ResourceGroupName $resourceGroup -Location $location -AppServicePlan $appServicePlanName
+
+How to deploy Web App from github (Script):
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$githubURL = "your git hub url repo"
+
+$PropertiesObject = @{
+	repoUrl = $githubURL;
+	branch = "master";
+	isManualIntegration = "true";
+}
+
+Set-AzResource -Properties $PropertiesObject -ResourceGroupName $resourceGroupName `
+-ResourceType Mircrosoft.Web/sites/sourcecontrols -ResourceName $appname/web -ApiVersion 2015-08-01 -Force
+
+Create deployement slots (script):
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$appServicePlanName = "app-plan"
+$appName = "webapp788788"
+
+#First we need to create the App Service Plan
+
+New-AzAppServicePlan -Name $appServicePlanName -ResourceGroupName $resourceGroup -Location $location -Tier Standard (or Higher to use slots)
+
+#Then we create a new deployment slot
+
+New-AzWebAppSlot -Name $appName -ResourceGroupName $resourceGroup -Slot staging
+
+#Then we deploy a newer version
+
+$PropertiesObject = @{
+	repoUrl = $githubURL;
+	branch = "master";
+	isManualIntegration = "true";
+}
+
+Set-AzResource -Properties $PropertiesObject -ResourceGroupName $resourceGroupName `
+-ResourceType Mircrosoft.Web/sites/slots/sourcecontrols -ResourceName $appname/staging/web -ApiVersion 2015-08-01 -Force
+
+#And then we swap the slots
+Switch-AzWebAppSlot -Name $appname -ResourceGroupName $resourceGroup -SourceSlotName staging -DestinationSlotName production
+
+Create VM scale set:
+
+$resourceGroup = "exam-grp"
+$location = "North Europe"
+$networkSecurityGroupName = "app-nsg"
+$scaleSetName= "appvm-scale-set"
+$vmSize = "Standard_DS2_v2"
+$vmImage = "Win2019Datacenter"
+$nsgName = "app-nsg"
+$vmPublicIP = "app-public-ip"
+$virtualNetworkName = "exam-network"
+$subnetName = "SubnetA"
+$dataDiskName = "my-disk"
+
+New-AzVMss -ResourceGroupName $resourceGroup -Location $location -VMScaleSetName $scaleSetName -virtualNetworkName $virtualNetworkName '
+-Subnet $subnetName -Image $vmImage -UpgradePolicyMode "Automatic" -SecurityGroup $nsgName -PublicIpAddressName $vmPublicIP -Credential (Get-Credential)
+
+Azure CLI:
+
+To install download installer from Microsoft Page

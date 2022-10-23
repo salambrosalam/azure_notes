@@ -1831,3 +1831,71 @@ New-AzVMss -ResourceGroupName $resourceGroup -Location $location -VMScaleSetName
 Azure CLI:
 
 To install download installer from Microsoft Page
+>az login (to login)
+
+Create resource group Azure CLI:
+
+>az group create --name "cli-grp" --location "North Europe"
+
+How to create a Vnet Azure CLI:
+
+>az network vnet create --name cli-network --resource-group cli-grp --subnet-name SubnetA --address-prefixes 10.0.0.0/16
+
+#To get details of an existing vnet
+>az network vnet show -g cli-grp -n cli-network
+
+#get list of networks
+>az network vnet list
+
+#create subnet
+>az network vnet subnete create --name SubnetB --address-prefixes 10.0.1.0/24 --resource-group cli-grp
+
+#Create VM
+>az vm create --resource-group cli-grp --name appvm --image Win2019Datacenter --public-ip-sku Standard --admin-username demouser
+
+#list vm
+>az vm list-sizes --location "North Europe"
+
+Attach data disk Azure CLI:
+
+>az disk create --name data-disk --resource-group cli-grp --location "North Europe" --size-gb 16 (this command will create disk)
+>$id=az disk show --name data-disk --resource-group cli-grp --query id
+>az vm disk attach --vm-name appvm --lun 0 --resource-group cli-grp --ids $id
+
+Azure storage account Azure CLI:
+
+>az storage account create--name appstore465665 --resource-group cli-grp --kind StorageV2 --sku Standard_LRS 
+
+Azure Web App Azure CLI:
+
+>az appservice plan create --name cliplan1000 --resource-group cli-grp --sku F1
+>az webapp create --name webapp9088776 --plan cliplan1000 --resource-group cli-grp
+
+Azure Scale set Azure CLI:
+
+>az vmss create --name app-set --resource-group cli-grp --admin-username demouser --image Win2019Datacenter --vm-sku "Standard_DS2_v2"
+
+Azure Kubernetes Azure CLI:
+
+#Create the Kubernetes cluster
+>az aks create --resource-group app-grp --name appcluster --node-counter 1 --enable-addons monitoring --generate-ssh-keys
+
+#Only if you don't have the kubectl tools. This is already available 
+>az aks install-cli
+
+#Get the credential of the cluster
+>az aks get-credentials --resource-group app-grp --name appcluster
+
+#Get the status of the Kubernetes nodes
+>kubectl get nodes
+
+#Apply the application configuration files
+>kubectl apply -f deployment.yml
+>kubectl apply -f service.yml
+
+#Get the external IP for the service
+>kubectl get service app-service
+
+Cloud Init Azure CLI:
+
+>az vm create --resource-group app-grp --name linuxvm --image Canonical:UbuntuServer:18.04-LTS:latest --custom-data config.txt --admin-username demousr --admin-password "AzurePassword@123"

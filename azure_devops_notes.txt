@@ -1,0 +1,53 @@
+This is the notes for exam AZ-400 (Azure Devops Engineer)
+
+=====================================Introduce=================================
+
+Project Waterfall-Model:
+
+Project Planning:
+    Requirements:
+        Analysis:
+            Design:
+                Coding:
+                    Testing:
+                        Deployment
+
+Advantages:
+    >Clear demarcation between one phase and another
+    >The requirements can be solidified up front.
+    >It gives the Project Manager a clear insight into aspects such as delivery dates, cost estimates etc.
+
+Disadvantages:
+    >The customer might get to see the end product only
+    >Changes in scope
+    >Bugs in the testing phase
+
+Project Agile:
+it's like a cycle:
+>Requirements
+>Design
+>Develop
+>Test
+>Deploy
+>Review
+
+In software development, agile practices include requirements discovery and solutions improvement
+through the collaborative effort of self-organizing and cross and cross-functional teams with their customer(s)/end user(s),
+adaptive planning, evolutionary development, early delivery, continual improvement, and flexible responses to changes in requirements, capacity, and understanding
+of the problems to be solved
+
+Project Scrum:
+
+This is an agile development methodology
+
+User Story - This is a feature that the user wants. This is written from the users perspectives.
+
+Product Backlog - This is the list of items that need to be done. The list is based off the requirements, features,
+enhancements. This is normally managed by the product owner or the product manager.
+
+Items are taken from the Product Backlog and then assigned to a sprint. The sprint is normally a duration of 2 weeks. The items assigned to the sprint are made part of the sprint backlog.
+
+Sprint Review - Here the team showcases what was done in the sprint.
+Here the decision can be made as to whether the deliverable should be promoted to production.
+
+Sprint Restropective - The team comes together to see what worked and what did not work.

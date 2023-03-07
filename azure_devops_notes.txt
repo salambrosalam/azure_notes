@@ -64,4 +64,37 @@ Access Levels:
 >Stakeholder - This is a free access but has limitations. Limited access to Azure Boards and  Pipelines. No access to code repositories.
 >Visual Studio - This depends on the Visual Studio subscription assigned to the user.
 
+Dashboards:
 
+This tool used to monitor in graphic way, the work process of project
+Important dashboard widgets:
+>Burndown - These charts focus on the remaining work within a specified period of time
+>Cycle time - This defines the time taken to close a work item after work on it has started
+>Lead time - This defines the time taken to close a work item after it was created
+>Velocity - This tracks the team's capacity to deliver work sprint after sprint
+
+Permissions:
+
+When a user is added to Azure DevOps, they are added to a default security group
+Permissions can be assigned at an organization, project or object level.
+
+Default Security groups:
+Project:
+>Build Administrators
+>Contributors
+>Project Administrators
+>Project Valid Users
+>Readers
+>Release Administrators
+>TeamName Team
+
+Organization or Collection:
+>Project Collection Administrators
+>Project Collection Build Administrators
+>Project Collection Build Service Accounts
+>Project Collection Proxy Service Accounts
+>Project Collection Service Accounts
+>Project Collection Test Service Accounts
+>Project Collection Valid Users
+>Project-Scoped Users
+>Security

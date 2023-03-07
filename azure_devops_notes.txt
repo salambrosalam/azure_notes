@@ -51,3 +51,17 @@ Sprint Review - Here the team showcases what was done in the sprint.
 Here the decision can be made as to whether the deliverable should be promoted to production.
 
 Sprint Restropective - The team comes together to see what worked and what did not work.
+
+Azure Boards:
+
+This tool used to create your organization and project architecture.
+
+Users:
+
+Access Levels:
+>Basic - This provides most of the features within Azure DevOps which excludes Azure Test Plans.
+>Basic + Test Plans - This give access Basic Plan+Test plans.
+>Stakeholder - This is a free access but has limitations. Limited access to Azure Boards and  Pipelines. No access to code repositories.
+>Visual Studio - This depends on the Visual Studio subscription assigned to the user.
+
+

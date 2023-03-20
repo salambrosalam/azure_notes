@@ -98,3 +98,12 @@ Organization or Collection:
 >Project Collection Valid Users
 >Project-Scoped Users
 >Security
+
+==============================================
+Git
+==============================================
+
+There are types of git merging:
+>Fast-forward merge: do not change main branch, only make changes in the feature branch and merge this to the main
+>ORT merge: when we make commits to main at the same time with feature branch and then merge, main branch with commits and feature.
+>Squash merge: uses for reduce commits to one specific commit

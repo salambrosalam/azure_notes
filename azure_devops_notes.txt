@@ -107,3 +107,20 @@ There are types of git merging:
 >Fast-forward merge: do not change main branch, only make changes in the feature branch and merge this to the main
 >ORT merge: when we make commits to main at the same time with feature branch and then merge, main branch with commits and feature.
 >Squash merge: uses for reduce commits to one specific commit
+
+Tagging
+
+It can be used to specify which commit is important in the repository.
+You can mark release points with the use of tags.
+Two types of tags - lightweight and annotated.
+Lightweight tag is just a pointer to a specific commit.
+
+Annotated:
+These are stored as full objects in the Git database.
+These are checksummed, they contain the tagger name, the email and date, have a message.
+It can also be signed and verified with GNU Privacy Guard.
+
+Useful command:
+>git gc - (to cleanup your repo) garbage control
+
+Branching strategies:

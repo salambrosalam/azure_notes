@@ -123,4 +123,4 @@ It can also be signed and verified with GNU Privacy Guard.
 Useful command:
 >git gc - (to cleanup your repo) garbage control
 
-Branching strategies:
+Azure pipelines

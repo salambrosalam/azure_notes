@@ -404,6 +404,8 @@ Kubernetes containes:
 >Container runtime - This is used to actually taking the images and deploying the containers on the node.
 >Kube-proxy is used for managing the networking aspects for the containers.
 
+NodePort - Map incoming direct traffic to the pods
+
 To deploy kubernetes cluster:
 
 >create kubernetes cluster
@@ -514,6 +516,9 @@ kubectl create secret generic azure-secret --from-literal=azurestorageaccountnam
 
 3. Use the following app.yml file as a reference for the deployment of a pod with the use of the file share
 
+to deploy container:
+>kubectl apply -f script.yml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -612,11 +617,23 @@ Azure Load Balancer:
 This is service to distribute traffic between VMs.
 In OSI model this is L4 
 
+Basic public IP:
+>Doesn't support zone redundant
+
+Standard public IP:
+>Support zone redundant
+
+
+
 To use Load Balancer we have config:
 >Backend pool (set of VMs wich will be served by this LB - Load Balancer)
 >Public IP address (to attach to LB)
->Health Probe
+>Health Probe (By default the health probe checks every 15 sec. You can't change the number of failures within a time period)
 >Load balancing rule
+
+2 Types of Load Balancer:
+>Public
+>Internal (Only for resources which inside of virtual network or VPN resources to access Azure)
 
 Load Balancer have 2 SKU's - 2 pricing plans:
 >Basic Load Balancer:
@@ -683,6 +700,9 @@ Here request to the APP Gateway can be secure
 And then the requests to the backend pool resources can go unencrypted.
 This can lift the burden of the backend pool for decrypting requests
 
+EXAM INFO:
+	App Gateway use The hostname, port and path int the URL of the request to route traffic to the Web Server.
+	App Gateway distributes request to each available server in a backend poll in turn, round-robin.
 
 When you deploy an Application Gateway you should have an empty subnet
 You can use it for:
@@ -714,7 +734,7 @@ How to make:
 
 In case of Multiple dns names:
 >additionally attach dns name to pub-ip of App LoadBalancer
-> then add to your domains CNAME of APp gateway dns name
+>then add to your domains CNAME of APp gateway dns name
 
 Virtual Network Peering:
 
@@ -813,7 +833,7 @@ How to create:
 Standard SKU - Only 1 Azure region
 Premium SKU - Multiple Azure region
 
-Network Wacther Service:
+Network Watcher Service:
 
 This is tool to monitor your network
 Connection Monitor - Check the network connectivity between machines. These can be in Azure or on your on-premises environments.
@@ -848,6 +868,8 @@ NSG Flow Logs:
 >To store your logs we have to create new "Storage acc" (or use existing)
 >Create  "flow log" in network watcher
 >In create storage acc after deploying new "Flow Log" will appear logs container
+
+Network watcher topology - is used to visual representation of the networking elements.
 
 Flow logs in JSON format:
 >UniTime format
@@ -1438,6 +1460,7 @@ In LogManagement we have different logs types:
 	>Heartbeat
 	>Perf
 	>Usage
+	>SysLog (if you neeed retrieve errors messages for some machines)
 
 1 Query:
 
@@ -1899,3 +1922,15 @@ Azure Kubernetes Azure CLI:
 Cloud Init Azure CLI:
 
 >az vm create --resource-group app-grp --name linuxvm --image Canonical:UbuntuServer:18.04-LTS:latest --custom-data config.txt --admin-username demousr --admin-password "AzurePassword@123"
+
+=================================================
+
+ARM -Azure Resource Manager
+
+=================================================
+
+ARM - this is Infrastructure as code tool.
+You can create Azure Resource Manager template.
+This is a JavaScript Object Notation (JSON) file that actually contains the defenition of the infrastructure.
+You can store the ARM templates in your source code repository along with your application code.
+

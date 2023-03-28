@@ -126,3 +126,21 @@ Useful command:
 Azure pipelines:
 
 Training commit!
+
+Continuous Integration:
+
+Automatically building and testing code every time a team member commits code changes to version control.
+Ours local machine
+
+Build Example:
+In Visual Studio, when we run an app a build of the app in conducted first.
+
+The build tool builds the project and the dependencies into a set of binaries.
+The binaries can then run on the target machine with the help of the .NET runtime.
+
+Azure pipelines:
+
+Build and test your code projects.
+Supports: Python, Java, PHP, Ruby, C#.
+You can use Azure pipelines for both continuous integration and continuous delivery
+You can deploy your app to multiple targets or environments.

@@ -144,3 +144,23 @@ Build and test your code projects.
 Supports: Python, Java, PHP, Ruby, C#.
 You can use Azure pipelines for both continuous integration and continuous delivery
 You can deploy your app to multiple targets or environments.
+
+====================================
+Security
+====================================
+
+Mend(WhiteSource)
+This is an open-source software security and compliance management tool.
+It integrates with the Azure DevOps set of tools, in the build pipelines.
+Check any sort of security vulnerabilities, licensing issues.
+Let's you know if you are using outdated libraries.
+
+=====================================
+Approvals and gates
+=====================================
+
+Pre-deployment approval - A user needs to validate the change request so that the deployment can be done to that stage
+Post-deployment approval - A user needs to sign-off on the deployment done so that it can move to another stage
+Pre-deployment gate - A user wants to ensure that no work items are active for the build to be deployed to a stage.
+Post-deployment gate - A user wants to ensure that no issues are tagged against a deployment before it can proceed to the next stage
+
